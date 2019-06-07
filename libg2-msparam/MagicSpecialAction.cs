@@ -1,17 +1,18 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 
 namespace libg2_msparam
 {
     public class MagicSpecialAction
     {
-        private Byte id;
-        public Byte Id { get { return id; } }
-        public Byte Icon { get; set; }
+        private byte id;
+        public byte Id { get { return id; } }
+        public byte Icon { get; set; }
 
         public const int LENGTH_NAME = 18;
-        private String _name;
-        public String Name
+        private string _name;
+        public string Name
         {
             get
             {
@@ -29,7 +30,7 @@ namespace libg2_msparam
                 }
             }
         }
-        public String PaddedName
+        public string NameWithPadding
         {
             get
             {
@@ -37,31 +38,39 @@ namespace libg2_msparam
             }
         }
 
-        public UInt16 PointCost { get; set; }
-        public Byte TargetEffect { get; set; }
-        public Byte TargetType { get; set; }
-        public UInt16 AttackStatBonus { get; set; }
-        public UInt16 PowerMultiplier { get; set; }
-        public UInt16 AreaSize { get; set; }
-        public UInt16 ChargeTimeAtLevel1 { get; set; }
-        public UInt16 ChargeTimeAtLevel5 { get; set; }
-        public UInt16 RecoveryTime { get; set; }
-        public UInt16 Animation { get; set; }
-        public Int16 Unknown { get; set; }
-        public Int16 IpDamage { get; set; }
-        public Int16 CancelDamage { get; set; }
-        public Int16 Knockback { get; set; }
-        public Byte Element { get; set; }
-        public Byte ElementModifier { get; set; }
-        public Byte Ailments { get; set; }
-        public Byte AilmentChance { get; set; }
-        public SByte PowModifier { get; set; }
-        public SByte DefModifier { get; set; }
-        public SByte ActModifier { get; set; }
-        public SByte MovModifier { get; set; }
-        public UInt16 SpecialEffect { get; set; }
-        public UInt16[] CoinCost { get; set; }
-        public UInt16 PowerPerLevel { get; set; }
+        public byte[] NameAsBytes
+        {
+            get
+            {
+                return Encoding.ASCII.GetBytes(NameWithPadding);
+            }
+        }
+
+        public ushort PointCost { get; set; }
+        public byte TargetEffect { get; set; }
+        public byte TargetType { get; set; }
+        public ushort AttackStatBonus { get; set; }
+        public ushort PowerMultiplier { get; set; }
+        public ushort AreaSize { get; set; }
+        public ushort ChargeTimeAtLevel1 { get; set; }
+        public ushort ChargeTimeAtLevel5 { get; set; }
+        public ushort RecoveryTime { get; set; }
+        public ushort Animation { get; set; }
+        public short Unknown { get; set; }
+        public short IpDamage { get; set; }
+        public short CancelDamage { get; set; }
+        public short Knockback { get; set; }
+        public byte Element { get; set; }
+        public byte ElementModifier { get; set; }
+        public byte Ailments { get; set; }
+        public byte AilmentChance { get; set; }
+        public sbyte PowModifier { get; set; }
+        public sbyte DefModifier { get; set; }
+        public sbyte ActModifier { get; set; }
+        public sbyte MovModifier { get; set; }
+        public ushort SpecialEffect { get; set; }
+        public ushort[] CoinCost { get; set; }
+        public ushort PowerPerLevel { get; set; }
 
         public const int LENGTH_DESCRIPTION = 40;
         private string _description;
@@ -80,33 +89,40 @@ namespace libg2_msparam
                 }
             }
         }
-        public String PaddedDescription
+        public string DescriptionWithPadding
         {
             get
             {
                 return Description.PadRight(LENGTH_DESCRIPTION);
             }
         }
+        public byte[] DescriptionAsBytes
+        {
+            get
+            {
+                return Encoding.ASCII.GetBytes(DescriptionWithPadding);
+            }
+        }
 
-        public enum IconValue : Byte
+        public enum IconValue : byte
         {
             None, Fire, Wind, Earth, Lightning, Blizzard, Water,
             Explosion, Forest, Light, Darkness, Sword, Staff, Crossbow, Dagger, Poleaxe, Chakram, Shoe
         }
-        public enum TargetEffectValue : Byte { RestoreHP, RestoreMP, RestoreSP, StatModifierOnly, Damage, Damage2 }
-        public enum TargetTypeValue : Byte
+        public enum TargetEffectValue : byte { RestoreHP, RestoreMP, RestoreSP, StatModifierOnly, Damage, Damage2 }
+        public enum TargetTypeValue : byte
         {
             OneFriend, SomeFriends, AllFriends, OneEnemy, SomeEnemies, AllEnemies,
             EnemyLine, SelfOnly, SpecialOneEnemy, SpecialSelfCenteredArea1, SpecialSelfOnly, SpecialSelfCenteredArea2,
             SpecialSelfCenteredArea3, SpecialOneEnemyInvisible, SpecialEveryone
         }
-        public enum ElementValue : Byte { Fire, Wind, Earth, Lightning, Blizzard, Unknown, Shatter }
-        public enum AilmentFlags : Byte
+        public enum ElementValue : byte { Fire, Wind, Earth, Lightning, Blizzard, Unknown, Shatter }
+        public enum AilmentFlags : byte
         {
             Poison = 1, Sleep = 2, Paralysis = 4, Confusion = 8, Plague = 16,
             MagicBlock = 32, MoveBlock = 64, Death = 128
         }
-        public enum SpecialEffectValue : UInt16
+        public enum SpecialEffectValue : ushort
         {
             Gravity = 0x0C, RemoveDebuffs = 0x0D, SpellbindingEye = 0x0E, RemoveBuffs = 0x16,
             RandomDebuff = 0x17, Lifesteal = 0x28, DamageMP = 0x32
@@ -162,7 +178,7 @@ namespace libg2_msparam
             {
                 writer.Write(id);
                 writer.Write(Icon);
-                writer.Write(System.Text.Encoding.ASCII.GetBytes(PaddedName));
+                writer.Write(NameAsBytes);
                 writer.Write(PointCost);
                 writer.Write(TargetEffect);
                 writer.Write(TargetType);
@@ -191,7 +207,7 @@ namespace libg2_msparam
                     writer.Write(CoinCost[i]);
                 }
                 writer.Write(PowerPerLevel);
-                writer.Write(System.Text.Encoding.ASCII.GetBytes(PaddedDescription));
+                writer.Write(DescriptionAsBytes);
             }
         }
     }
